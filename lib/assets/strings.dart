@@ -9,12 +9,18 @@ final String categoriesApiUrl = host + "/api/categories";
 final String prestationsApiUrl = host + "/api/prestations";
 final String formationApiUrl = host + "/api/formations";
 final String employeeApiUrl = host + "/api/employees";
+final String reservationsApiUrl = host + "/api/reservations";
 final String createUserApiUrl = host + "/api/auth/local/register";
 final String clientsApiUrl = host + "/api/clients";
 
 final String loadingDataText = "Chargement en cours ...";
 final String labelGoBack = "Retour";
 final String currencySymbol = "€";
+
+//
+
+final String loremIpsum =
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.";
 
 // Onboarding
 

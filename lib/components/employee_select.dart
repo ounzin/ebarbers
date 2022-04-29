@@ -113,7 +113,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                         lengthEmployees!, (_) => false,
                         growable: false);
                     if (lengthEmployees == 0) {
-                      return new Text(strings.labelNoPrestationAvailable);
+                      return new Text("Aucun employee disponible !");
                     } else {
                       return ListView.builder(
                         shrinkWrap: true,
@@ -166,12 +166,30 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                           MaterialStateProperty.all(colors.primary_color)),
                   child: new Text("Réserver"),
                   onPressed: () {
+                    Map availability =
+                        widget.employees![val]['attributes']['availability'];
+
+                    Map avalaible = {};
+                    availability.forEach((k, v) {
+                      if (v != "null") {
+                        List interval = v.split('-');
+                        List elements = [];
+
+                        int start = int.parse(interval[0]);
+                        int end = int.parse(interval[1]);
+                        for (int i = start; i < end; i++) {
+                          elements.add(i);
+                        }
+                        avalaible[k] = elements;
+                      }
+                    });
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => BookingCalendar(
                                 idClient: widget.idClient,
                                 idEmployee: val,
+                                avalaible: avalaible,
                               )),
                     );
                   },

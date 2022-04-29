@@ -116,9 +116,17 @@ class _HomeState extends State<Home> {
                           int idCategorie = categories![index]['id'];
                           String categoryName =
                               categories![index]['attributes']['name'];
-                          String holderUrl = strings.host +
-                              categories![index]['attributes']['holder']['data']
-                                  ['attributes']['url'];
+                          String? holderUrl;
+
+                          if (categories![index]['attributes']['holder']
+                                  ['data'] ==
+                              null) {
+                            holderUrl = null;
+                          } else {
+                            holderUrl = strings.host +
+                                categories![index]['attributes']['holder']
+                                    ['data']['attributes']['url'];
+                          }
 
                           return CategoryCard(
                               idCategory: idCategorie,
@@ -128,11 +136,8 @@ class _HomeState extends State<Home> {
                   }
                 }
 
-                return Container(
-                  child: new Center(
-                    child:
-                        new CircularProgressIndicator(), // <- error API :: to mod
-                  ),
+                return Center(
+                  child: CircularProgressIndicator(), // <- error API :: to mod
                 ); // <- future builder outpoint (else)
               },
             )

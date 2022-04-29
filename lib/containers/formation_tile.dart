@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_unnecessary_containers, unnecessary_new, prefer_const_constructors
 
+import 'package:ebarber/containers/formation_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -12,7 +13,24 @@ import '../../assets/strings.dart' as strings;
 import '../../assets/colors.dart' as colors;
 
 class FormationTile extends StatefulWidget {
-  const FormationTile({Key? key}) : super(key: key);
+  int? idFormation;
+  int? nbrVideos;
+  int? price;
+  String? titleFormation;
+  String? description;
+  String? urlCover;
+  List? videos;
+
+  FormationTile(
+      {Key? key,
+      required this.idFormation,
+      required this.nbrVideos,
+      required this.titleFormation,
+      required this.price,
+      required this.description,
+      required this.urlCover,
+      required this.videos})
+      : super(key: key);
 
   @override
   State<FormationTile> createState() => _FormationTileState();
@@ -31,9 +49,21 @@ class _FormationTileState extends State<FormationTile> {
           ),
         ),
         child: new InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FormationPresentation(
+                        urlCover: widget.urlCover,
+                        priceFormation: widget.price,
+                        titleFormation: widget.titleFormation,
+                        descriptionFormation: widget.description,
+                        videos: widget.videos,
+                      )),
+            );
+          },
           child: new Container(
-            height: 14.5.h, // <- to remove ?
+            height: 15.h, // <- to remove ?
             margin: EdgeInsets.fromLTRB(0, 0.5.w, 0, 0.5.w),
             child: new Column(children: [
               new Row(
@@ -45,93 +75,62 @@ class _FormationTileState extends State<FormationTile> {
                         radius: 50,
                         backgroundColor: Colors.white,
                         child: CircleAvatar(
-                          backgroundImage: AssetImage("images/logo.png"),
+                          backgroundColor: Colors.white,
+                          backgroundImage: NetworkImage(widget.urlCover!),
                           radius: 48,
                         ),
                       ))),
-                  new Padding(
-                    padding: EdgeInsets.fromLTRB(1.w, 0, 1.w, 0),
-                  ),
+
                   //
-                  new Flexible(
+                  new Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 10.h, 0),
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         new Text(
-                          "null",
+                          widget.titleFormation!,
                           overflow: TextOverflow.ellipsis,
-                          style:
-                              TextStyle(fontSize: 10.sp, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700),
                         ),
                         new Padding(
-                          padding: EdgeInsets.fromLTRB(1.w, 0, 1.w, 0),
+                          padding: EdgeInsets.fromLTRB(0, 0.5.h, 0, 0.5.h),
                         ),
-                        new Row(
-                          children: [
-                            new Icon(
-                              Icons.public,
-                              color: Colors.white,
-                              size: 1.2.h,
-                            ),
-                            new Padding(
-                              padding: EdgeInsets.fromLTRB(1.w, 0, 1.w, 0),
-                            ),
-                            new Text(
-                              "null store",
-                              style: TextStyle(
-                                  fontSize: 08.sp, color: Colors.white),
-                            )
-                          ],
+                        new Text(
+                          widget.nbrVideos!.toString() + " vidéos",
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 10.sp),
                         ),
-                        new Container(
-                            padding: EdgeInsets.fromLTRB(0, 3.w, 0, 0),
-                            alignment: Alignment.centerLeft,
-                            child: new GlassmorphicContainer(
-                                width: 20.w,
-                                height: 2.5.h,
-                                borderRadius: 50,
-                                blur: 30,
-                                alignment: Alignment.center,
-                                border: 1,
-                                linearGradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Color(0xFFffffff).withOpacity(0.1),
-                                      Color(0xFFFFFFFF).withOpacity(0.05),
-                                    ],
-                                    stops: const [
-                                      0.1,
-                                      1,
-                                    ]),
-                                borderGradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Color(0xFFffffff).withOpacity(0.5),
-                                    Color((0xFFFFFFFF)).withOpacity(0.5),
-                                  ],
-                                ),
-                                child: new Text("null",
-                                    style: TextStyle(
-                                        fontSize: 8.sp,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white)))),
                       ],
                     ),
                   ),
-                  new Container(
-                    child: new Center(
-                        child: Icon(
-                      Icons.chevron_right,
-                      size: 18.sp,
-                      color: Colors.white,
-                    )),
-                  ),
-                  new Padding(
-                    padding: EdgeInsets.fromLTRB(1.w, 0, 4.w, 0),
-                  ),
+
+                  new InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => FormationPresentation(
+                                  urlCover: widget.urlCover,
+                                  priceFormation: widget.price,
+                                  titleFormation: widget.titleFormation,
+                                  descriptionFormation: widget.description,
+                                  videos: widget.videos,
+                                )),
+                      );
+                    },
+                    child: new CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: new Center(
+                            child: Icon(
+                          Icons.visibility,
+                          size: 18.sp,
+                          color: colors.primary_color,
+                        ))),
+                  )
                 ],
               )
             ]),

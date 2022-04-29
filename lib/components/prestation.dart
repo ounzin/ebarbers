@@ -81,7 +81,7 @@ class _PrestationState extends State<Prestation> {
               ),
               // Categorie picture, prestation title, duration and price
               new Container(
-                height: 30.h,
+                height: 35.h,
                 decoration: BoxDecoration(
                     color: colors.primary_color.withOpacity(0.8),
                     borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -153,7 +153,7 @@ class _PrestationState extends State<Prestation> {
               //description
               new Text(widget.description!),
               Padding(
-                padding: EdgeInsets.fromLTRB(0, 1.5.h, 0, 1.5.h),
+                padding: EdgeInsets.fromLTRB(0, 1.h, 0, 1.h),
               ),
 
               //button reserver
@@ -184,8 +184,10 @@ class _PrestationState extends State<Prestation> {
   }
 
   Future<Map> getEmployees() async {
-    String apiUrl =
-        strings.employeeApiUrl + '?filters[authLevel][' + '\$' + 'eq]=employee';
+    String apiUrl = strings.employeeApiUrl +
+        '?filters[role][' +
+        '\$' +
+        'eq]=Employe&populate=*';
     http.Response response = await http.get(Uri.parse(apiUrl));
     return json.decode(response.body);
   }

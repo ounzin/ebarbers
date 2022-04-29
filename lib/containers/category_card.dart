@@ -26,6 +26,7 @@ class _CategoryCardState extends State<CategoryCard> {
     return new Card(
         margin: EdgeInsets.all(2.w),
         elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         shadowColor: colors.primary_color,
         child: new InkWell(
             onTap: () {
@@ -44,15 +45,18 @@ class _CategoryCardState extends State<CategoryCard> {
               margin: EdgeInsets.all(0.5.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15.0),
-                image: DecorationImage(
-                  image: NetworkImage(widget.holderUrl!),
-                  fit: BoxFit.cover,
-                ),
+                image: widget.holderUrl == null
+                    ? null
+                    : DecorationImage(
+                        image: NetworkImage(widget.holderUrl!),
+                        fit: BoxFit.cover,
+                      ),
               ),
               child: new Container(
                 alignment: Alignment.center,
-                decoration:
-                    BoxDecoration(color: Colors.black.withOpacity(0.40)),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.black.withOpacity(0.40)),
                 child: Text(
                   widget.categoryName!,
                   style: TextStyle(

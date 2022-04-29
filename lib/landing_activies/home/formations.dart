@@ -23,12 +23,16 @@ class Formations extends StatefulWidget {
 
 class _FormationsState extends State<Formations> {
   String? jwt;
+  String? idClient;
 
   _loadingData() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
-    var value = await storage.read(key: 'jwt');
+    var jwtValue = await storage.read(key: 'jwt');
+    var idValue = await storage.read(key: 'idClient');
+
     setState(() {
-      jwt = value;
+      jwt = jwtValue;
+      idClient = idValue;
     });
   }
 
@@ -121,6 +125,7 @@ class _FormationsState extends State<Formations> {
 
                     if (data != null) {
                       formations = data['data'];
+                      print(jwt);
                       lengthFormations = formations!.length;
                     }
 
@@ -129,7 +134,30 @@ class _FormationsState extends State<Formations> {
                       physics: ScrollPhysics(),
                       itemCount: lengthFormations,
                       itemBuilder: (context, index) {
-                        return FormationTile();
+                        String titleFormation =
+                            formations![index]['attributes']['title'];
+                        String descriptionFromation =
+                            formations[index]['attributes']['title'];
+                        String urlCover = strings.host +
+                            formations[index]['attributes']['cover']['data']
+                                ['attributes']['url'];
+
+                        int priceFormation =
+                            formations[index]['attributes']['price'];
+                        List videos =
+                            formations[index]['attributes']['videos']['data'];
+                        int nbrVideos = videos.length;
+                        int idFormation = formations[index]['id'];
+
+                        return FormationTile(
+                          idFormation: idFormation,
+                          nbrVideos: nbrVideos,
+                          titleFormation: titleFormation,
+                          price: priceFormation,
+                          description: descriptionFromation,
+                          videos: videos,
+                          urlCover: urlCover,
+                        );
                       },
                     );
                   }
@@ -144,10 +172,25 @@ class _FormationsState extends State<Formations> {
   }
 
   Future<Map> getFormations() async {
-    String apiUrl = strings.formationApiUrl + "?populate=*";
+    String apiUrl = strings.formationApiUrl +
+        "?populate[videos][populate]=*&populate[cover][populate]=*";
     http.Response response = await http.get(Uri.parse(apiUrl), headers: {
       'Authorization': 'Bearer $jwt',
     });
     return json.decode(response.body);
+  }
+
+  Future<List> getBuyedFormations(String idClient) async {
+    List res = [];
+    String apiUrl =
+        strings.clientsApiUrl + idClient + '?populate[formations][populate]';
+    http.Response response = await http.get(Uri.parse(apiUrl), headers: {
+      'Authorization': 'Bearer $jwt',
+    });
+    if (response.statusCode == 200) {
+      Map body = json.decode(response.body);
+      var formations = body['data']['attributes']['formations']['data'];
+    }
+    return res;
   }
 }

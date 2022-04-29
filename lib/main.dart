@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:ebarber/components/employee_select.dart';
+import 'package:ebarber/containers/formation_presentation.dart';
+import 'package:ebarber/containers/video_player.dart';
 import 'package:ebarber/landing_activies/home/landing_home.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ebarber/onboarding/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +30,13 @@ void main() {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(fontFamily: 'Poppins'),
         home: const Home(),
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        supportedLocales: const [
+          Locale('en'), // English
+          Locale('es'), // Spanish
+          Locale('fr'), // French
+          Locale('zh'), // Chinese
+        ],
         routes: {
           // Onboarding activities
           'sign_in': (_) => const SignIn(),
@@ -38,6 +48,8 @@ void main() {
           //containers
           //'category_card': (_) => const CategoryCard(),
           //'employee': (_) => const EmployeeSelect()
+          //'formation_presentation': (_) => FormationPresentation(),
+          //'video_player': (_) => DefaultPlayer()
         },
       );
     },

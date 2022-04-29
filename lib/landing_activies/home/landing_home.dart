@@ -94,18 +94,6 @@ class _LandingHomeState extends State<LandingHome> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       // <- Top Banner
       children: [
-        Container(
-          child: InkWell(
-            onTap: null,
-            child: CircleAvatar(
-              backgroundColor: colors.primary_color,
-              child: const Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ),
         //
         new Image.asset(
           logoUrl,
