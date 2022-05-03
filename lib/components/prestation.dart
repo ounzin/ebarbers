@@ -173,6 +173,7 @@ class _PrestationState extends State<Prestation> {
                           builder: (context) => EmployeeSelect(
                                 employees: employees,
                                 idClient: idClient,
+                                idPrestation: widget.idPrestation,
                               )),
                     );
                   },

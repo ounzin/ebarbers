@@ -13,6 +13,7 @@ import '../../assets/strings.dart' as strings;
 import '../../assets/colors.dart' as colors;
 
 class FormationTile extends StatefulWidget {
+  bool? isBuyed;
   int? idFormation;
   int? nbrVideos;
   int? price;
@@ -20,16 +21,19 @@ class FormationTile extends StatefulWidget {
   String? description;
   String? urlCover;
   List? videos;
+  List? buyedFormations;
 
   FormationTile(
       {Key? key,
+      required this.isBuyed,
       required this.idFormation,
       required this.nbrVideos,
       required this.titleFormation,
       required this.price,
       required this.description,
       required this.urlCover,
-      required this.videos})
+      required this.videos,
+      required this.buyedFormations})
       : super(key: key);
 
   @override
@@ -54,11 +58,14 @@ class _FormationTileState extends State<FormationTile> {
               context,
               MaterialPageRoute(
                   builder: (context) => FormationPresentation(
+                        idFormation: widget.idFormation,
+                        isBuyed: widget.isBuyed,
                         urlCover: widget.urlCover,
                         priceFormation: widget.price,
                         titleFormation: widget.titleFormation,
                         descriptionFormation: widget.description,
                         videos: widget.videos,
+                        buyedFormations: widget.buyedFormations,
                       )),
             );
           },
@@ -114,11 +121,14 @@ class _FormationTileState extends State<FormationTile> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => FormationPresentation(
+                                  idFormation: widget.idFormation,
+                                  isBuyed: widget.isBuyed,
                                   urlCover: widget.urlCover,
                                   priceFormation: widget.price,
                                   titleFormation: widget.titleFormation,
                                   descriptionFormation: widget.description,
                                   videos: widget.videos,
+                                  buyedFormations: widget.buyedFormations,
                                 )),
                       );
                     },

@@ -24,6 +24,7 @@ class Formations extends StatefulWidget {
 class _FormationsState extends State<Formations> {
   String? jwt;
   String? idClient;
+  List buyedFormations = [];
 
   _loadingData() async {
     FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -34,12 +35,13 @@ class _FormationsState extends State<Formations> {
       jwt = jwtValue;
       idClient = idValue;
     });
+    buyedFormations = await getBuyedFormations(idClient!);
   }
 
   @override
   void initState() {
-    super.initState();
     _loadingData();
+    super.initState();
   }
 
   @override
@@ -125,7 +127,6 @@ class _FormationsState extends State<Formations> {
 
                     if (data != null) {
                       formations = data['data'];
-                      print(jwt);
                       lengthFormations = formations!.length;
                     }
 
@@ -150,6 +151,9 @@ class _FormationsState extends State<Formations> {
                         int idFormation = formations[index]['id'];
 
                         return FormationTile(
+                          isBuyed: buyedFormations.contains(idFormation)
+                              ? true
+                              : false,
                           idFormation: idFormation,
                           nbrVideos: nbrVideos,
                           titleFormation: titleFormation,
@@ -157,6 +161,7 @@ class _FormationsState extends State<Formations> {
                           description: descriptionFromation,
                           videos: videos,
                           urlCover: urlCover,
+                          buyedFormations: buyedFormations,
                         );
                       },
                     );
@@ -181,16 +186,23 @@ class _FormationsState extends State<Formations> {
   }
 
   Future<List> getBuyedFormations(String idClient) async {
-    List res = [];
-    String apiUrl =
-        strings.clientsApiUrl + idClient + '?populate[formations][populate]';
+    String apiUrl = strings.clientsApiUrl +
+        "/" +
+        idClient +
+        '?populate[formations][populate]=*';
     http.Response response = await http.get(Uri.parse(apiUrl), headers: {
       'Authorization': 'Bearer $jwt',
     });
     if (response.statusCode == 200) {
+      List<int> idList = [];
       Map body = json.decode(response.body);
-      var formations = body['data']['attributes']['formations']['data'];
+      List formations = body['data']['attributes']['formations']['data'];
+      for (var i = 0; i < formations.length; i++) {
+        idList.add(formations[i]['id']);
+      }
+      return idList;
+    } else {
+      return [];
     }
-    return res;
   }
 }

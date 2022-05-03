@@ -16,7 +16,12 @@ import '../assets/colors.dart' as colors;
 class EmployeeSelect extends StatefulWidget {
   List? employees;
   int? idClient;
-  EmployeeSelect({Key? key, required this.employees, required this.idClient})
+  int? idPrestation;
+  EmployeeSelect(
+      {Key? key,
+      required this.employees,
+      required this.idClient,
+      required this.idPrestation})
       : super(key: key);
 
   @override
@@ -27,6 +32,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
   List? employees;
   int? lengthEmployees;
   int val = 1;
+  String? nomEmployee;
   _loadData() async {
     setState(() {
       employees = widget.employees;
@@ -115,6 +121,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                     if (lengthEmployees == 0) {
                       return new Text("Aucun employee disponible !");
                     } else {
+                      nomEmployee = employees![0]['attributes']['name'];
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: ScrollPhysics(),
@@ -140,6 +147,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                                       } else {
                                         setState(() {
                                           val = value!;
+                                          nomEmployee = employeeName;
                                           _checkedListUpdater(
                                               isCheckedRadioList, value);
                                         });
@@ -155,7 +163,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                   },
                 ),
               ),
-              //button reserver
+              //button choose date
               new Container(
                 margin: EdgeInsets.fromLTRB(3.h, 0, 3.h, 0),
                 child: new ElevatedButton(
@@ -164,7 +172,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                           EdgeInsets.fromLTRB(0, 2.h, 0, 2.h)),
                       backgroundColor:
                           MaterialStateProperty.all(colors.primary_color)),
-                  child: new Text("Réserver"),
+                  child: new Text("Choisir date et heure"),
                   onPressed: () {
                     Map availability =
                         widget.employees![val]['attributes']['availability'];
@@ -189,6 +197,8 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                           builder: (context) => BookingCalendar(
                                 idClient: widget.idClient,
                                 idEmployee: val,
+                                nomEmployee: nomEmployee,
+                                idPrestation: widget.idPrestation,
                                 avalaible: avalaible,
                               )),
                     );

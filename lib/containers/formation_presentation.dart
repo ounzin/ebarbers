@@ -1,7 +1,10 @@
 // ignore_for_file: avoid_unnecessary_containers, unnecessary_new, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:ebarber/containers/video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:glassmorphism/glassmorphism.dart';
@@ -9,18 +12,25 @@ import 'package:validators/validators.dart';
 
 //
 
+import 'package:http/http.dart' as http;
 import '../../assets/strings.dart' as strings;
 import '../../assets/colors.dart' as colors;
 
 class FormationPresentation extends StatefulWidget {
+  bool? isBuyed;
   int? priceFormation;
+  int? idFormation;
   String? titleFormation;
   String? descriptionFormation;
   String? urlCover;
   List? videos;
+  List? buyedFormations;
 
   FormationPresentation(
       {Key? key,
+      required this.buyedFormations,
+      required this.idFormation,
+      required this.isBuyed,
       required this.urlCover,
       required this.priceFormation,
       required this.titleFormation,
@@ -33,6 +43,27 @@ class FormationPresentation extends StatefulWidget {
 }
 
 class _FormationPresentationState extends State<FormationPresentation> {
+  String? jwt;
+  String? idClient;
+  List buyedFormations = [];
+
+  _loadingData() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    var jwtValue = await storage.read(key: 'jwt');
+    var idValue = await storage.read(key: 'idClient');
+
+    setState(() {
+      jwt = jwtValue;
+      idClient = idValue;
+    });
+  }
+
+  @override
+  void initState() {
+    _loadingData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -119,55 +150,80 @@ class _FormationPresentationState extends State<FormationPresentation> {
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 15.sp),
                                     ),
-                                    new Text(
-                                      "Prix :  " +
-                                          widget.priceFormation.toString() +
-                                          " " +
-                                          strings.currencySymbol,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold),
+                                    Container(
+                                      child: widget.isBuyed!
+                                          ? null
+                                          : new Text(
+                                              "Prix :  " +
+                                                  widget.priceFormation
+                                                      .toString() +
+                                                  " " +
+                                                  strings.currencySymbol,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20.sp,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                     )
                                   ]),
                             )),
                         new Padding(
                           padding: EdgeInsets.all(2.w),
                         ),
-                        new GlassmorphicContainer(
-                            width: 40.h,
-                            height: 05.h,
-                            borderRadius: 20,
-                            blur: 10,
-                            alignment: Alignment.center,
-                            border: 1,
-                            linearGradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0xFFffffff).withOpacity(0.1),
-                                  colors.primary_color.withOpacity(0.05),
-                                ],
-                                stops: [
-                                  0.1,
-                                  1,
-                                ]),
-                            borderGradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFFffffff).withOpacity(0.5),
-                                colors.primary_color.withOpacity(0.5),
-                              ],
-                            ),
-                            child: new Container(
-                              padding: EdgeInsets.all(2.w),
-                              child: new Text(
-                                "Acheter",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15.sp),
-                              ),
-                            )),
+                        Container(
+                          child: widget.isBuyed!
+                              ? null
+                              : new GestureDetector(
+                                  onTap: () async {
+                                    bool res = await buyFormation(
+                                        idClient!,
+                                        widget.idFormation!,
+                                        widget.buyedFormations!);
+                                    print(res);
+                                    if (res) {
+                                      setState(() {
+                                        widget.isBuyed = true;
+                                      });
+                                    }
+                                  },
+                                  child: GlassmorphicContainer(
+                                      width: 40.h,
+                                      height: 05.h,
+                                      borderRadius: 20,
+                                      blur: 10,
+                                      alignment: Alignment.center,
+                                      border: 1,
+                                      linearGradient: LinearGradient(
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                            Color(0xFFffffff).withOpacity(0.1),
+                                            colors.primary_color
+                                                .withOpacity(0.05),
+                                          ],
+                                          stops: [
+                                            0.1,
+                                            1,
+                                          ]),
+                                      borderGradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Color(0xFFffffff).withOpacity(0.5),
+                                          colors.primary_color.withOpacity(0.5),
+                                        ],
+                                      ),
+                                      child: new Container(
+                                        padding: EdgeInsets.all(2.w),
+                                        child: new Text(
+                                          "Acheter",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.sp),
+                                        ),
+                                      )),
+                                ),
+                        )
                       ],
                     ))
               ],
@@ -232,17 +288,20 @@ class _FormationPresentationState extends State<FormationPresentation> {
                         ),
                         trailing: InkWell(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DefaultPlayer(
-                                        url: urlVideo,
-                                        title: titleVideo,
-                                        description: descriptionVideo,
-                                      )),
-                            );
+                            widget.isBuyed!
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DefaultPlayer(
+                                              url: urlVideo,
+                                              title: titleVideo,
+                                              description: descriptionVideo,
+                                            )),
+                                  )
+                                : null;
                           },
-                          child: Icon(Icons.play_arrow,
+                          child: Icon(
+                              widget.isBuyed! ? Icons.play_arrow : Icons.lock,
                               color: colors.primary_color),
                         ),
                       )),
@@ -255,5 +314,27 @@ class _FormationPresentationState extends State<FormationPresentation> {
         ),
       ),
     );
+  }
+
+  Future<bool> buyFormation(
+      String idClient, int idFormation, List buyedFormations) async {
+    List newBuyedFormations = buyedFormations;
+    newBuyedFormations.add(idFormation);
+
+    String apiUrl = strings.clientsApiUrl + "/" + idClient;
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request('PUT', Uri.parse(apiUrl));
+    request.body = json.encode({
+      "data": {"formations": newBuyedFormations}
+    });
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+
+    print(response.reasonPhrase);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

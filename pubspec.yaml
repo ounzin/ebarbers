@@ -81,6 +81,7 @@ flutter:
      - images/logo.png
      - images/category-holder.jpg
      - images/cover-formation.jpg
+     - images/cool.png
 
   fonts:
     - family: Poppins
