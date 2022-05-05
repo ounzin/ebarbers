@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unnecessary_containers, unnecessary_new, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: avoid_unnecessary_containers, unnecessary_new, prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'dart:convert';
 
@@ -6,9 +6,7 @@ import 'package:ebarber/containers/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:glassmorphism/glassmorphism.dart';
-import 'package:validators/validators.dart';
 
 //
 
@@ -179,7 +177,7 @@ class _FormationPresentationState extends State<FormationPresentation> {
                                         idClient!,
                                         widget.idFormation!,
                                         widget.buyedFormations!);
-                                    print(res);
+
                                     if (res) {
                                       setState(() {
                                         widget.isBuyed = true;
@@ -320,6 +318,7 @@ class _FormationPresentationState extends State<FormationPresentation> {
       String idClient, int idFormation, List buyedFormations) async {
     List newBuyedFormations = buyedFormations;
     newBuyedFormations.add(idFormation);
+    //
 
     String apiUrl = strings.clientsApiUrl + "/" + idClient;
     var headers = {'Content-Type': 'application/json'};
@@ -329,9 +328,31 @@ class _FormationPresentationState extends State<FormationPresentation> {
     });
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
-
-    print(response.reasonPhrase);
     if (response.statusCode == 200) {
+      // add element to achats tables
+      final DateTime now = DateTime.now();
+      final String date = now.toIso8601String().split('T').first;
+
+      String apiUrl2 = strings.sellsApiUrl;
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request('POST', Uri.parse(apiUrl2));
+      request.body = json.encode({
+        "data": {
+          "date": date,
+          "formation": idFormation,
+          "client": int.parse(idClient)
+        }
+      });
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        // ignore: avoid_print
+        print("Added to Formation but can't add to Achat");
+      }
+      //
       return true;
     } else {
       return false;

@@ -162,8 +162,6 @@ class _SignUpState extends State<SignUp> {
                         phoneController.text.toString(),
                         emailController.text.toString(),
                         passwordController.text.toString());
-
-                    print(condition);
                     if (condition) {
                       Navigator.push(
                         context,
@@ -234,11 +232,9 @@ class _SignUpState extends State<SignUp> {
             body: json.encode({
               "data": {"user": idUser}
             }));
-
-        print(responseLink.body);
         if (responseLink.statusCode == 200) {
           // client and user are linked
-          _savePreferences(idClient.toString(), jwt!);
+          _savePreferences(idClient.toString(), jwt!, "yes");
           setState(() {
             result = true;
           });
@@ -249,10 +245,11 @@ class _SignUpState extends State<SignUp> {
     return result;
   }
 
-  void _savePreferences(String id, String jwt) async {
+  void _savePreferences(String id, String jwt, String isLogged) async {
     // store jwt and id
     FlutterSecureStorage storage = new FlutterSecureStorage();
     await storage.write(key: 'idClient', value: id);
     await storage.write(key: 'jwt', value: jwt);
+    await storage.write(key: 'isLogged', value: isLogged);
   }
 }

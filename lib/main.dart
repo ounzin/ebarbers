@@ -8,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ebarber/onboarding/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sizer/sizer.dart';
 
 //
@@ -64,12 +65,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String isLogged = "";
+
+  _loadPreferences() async {
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    var tmp = await storage.read(key: 'jwt');
+    if (tmp != null) {
+      setState(() {
+        isLogged = tmp;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(milliseconds: 2500), () {
-      Navigator.pushNamed(context, 'landing_home');
-    });
+    _loadPreferences();
+    if (isLogged == 'yes') {
+      Timer(const Duration(milliseconds: 2500), () {
+        Navigator.pushNamed(context, 'landing_home');
+      });
+    } else {
+      Timer(const Duration(milliseconds: 2500), () {
+        Navigator.pushNamed(context, 'sign_in');
+      });
+    }
   }
 
   @override

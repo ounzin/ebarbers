@@ -1,9 +1,14 @@
+import 'dart:convert';
+
+import 'package:ebarber/landing_activies/home/landing_home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:validators/validators.dart';
 import 'package:sizer/sizer.dart';
 
 //
+import 'package:http/http.dart' as http;
 import '../assets/strings.dart' as strings;
 import '../assets/colors.dart' as colors;
 
@@ -19,6 +24,7 @@ class _SignInState extends State<SignIn> {
   TextEditingController passwordController = TextEditingController();
   bool _passwordVisible = true;
   bool checkBoxValue = false;
+  bool showWarning = false;
   Color checkBoxTextColor = Colors.black;
 
   @override
@@ -96,6 +102,14 @@ class _SignInState extends State<SignIn> {
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 1.h, 0, 1.h),
                     ),
+                    if (showWarning)
+                      const Text(
+                        "Ce profil n'existe pas !",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 1.h, 0, 1.h),
+                    ),
                     Row(
                       children: [
                         Checkbox(
@@ -132,9 +146,35 @@ class _SignInState extends State<SignIn> {
                             fontSize: 3.8.w,
                             fontWeight: FontWeight.w700),
                       ),
-                      onPressed: () {
-                        if (!checkBoxValue) {
-                        } else {}
+                      onPressed: () async {
+                        var data = await logUser(
+                            emailController.text.toString(),
+                            passwordController.text.toString());
+
+                        if (data.length < 2) {
+                          setState(() {
+                            showWarning = true;
+                          });
+                        }
+                        {
+                          if (!checkBoxValue) {
+                            _savePreferences(data[1], data[0], "no");
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LandingHome()),
+                              (Route<dynamic> route) => false,
+                            );
+                          } else {
+                            _savePreferences(data[1], data[0], "yes");
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LandingHome()),
+                              (Route<dynamic> route) => false,
+                            );
+                          }
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -176,5 +216,55 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+
+  Future<List> logUser(String identifier, String password) async {
+    List<String> res = []; // <- will contain user jwt, id
+    String jwt;
+    String idClient;
+    //
+    String apiUrl = strings.logUserApiUrl;
+    http.Response response = await http.post(Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({"identifier": identifier, "password": password}));
+
+    if (response.statusCode == 200) {
+      Map data = json.decode(response.body);
+      int id = -1;
+      int idUser = data['user']['id'];
+      jwt = data['jwt'];
+      res.add(jwt);
+      id = await getClientId(idUser);
+
+      if (id != -1) {
+        idClient = id.toString();
+        res.add(idClient);
+      }
+    }
+    //
+    return res;
+  }
+
+  Future getClientId(int userId) async {
+    String apiUrl = strings.clientsApiUrl +
+        "?filters[user][id][" +
+        "\$" +
+        "eq]=" +
+        userId.toString();
+    http.Response response = await http.get(Uri.parse(apiUrl));
+    if (response.statusCode == 200) {
+      Map data = json.decode(response.body);
+      int id = data['data'][0]['id'];
+      return id;
+    }
+    return -1;
+  }
+
+  void _savePreferences(String id, String jwt, String isLogged) async {
+    // store jwt and id
+    FlutterSecureStorage storage = new FlutterSecureStorage();
+    await storage.write(key: 'idClient', value: id);
+    await storage.write(key: 'jwt', value: jwt);
+    await storage.write(key: 'isLogged', value: isLogged);
   }
 }

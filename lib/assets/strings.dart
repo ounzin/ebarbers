@@ -11,7 +11,9 @@ final String formationApiUrl = host + "/api/formations";
 final String employeeApiUrl = host + "/api/employees";
 final String reservationsApiUrl = host + "/api/reservations";
 final String createUserApiUrl = host + "/api/auth/local/register";
+final String logUserApiUrl = host + "/api/auth/local";
 final String clientsApiUrl = host + "/api/clients";
+final String sellsApiUrl = host + "/api/achats";
 
 final String loadingDataText = "Chargement en cours ...";
 final String labelGoBack = "Retour";
@@ -67,3 +69,8 @@ final String labelProfil = "Profil";
 
 final String labelNoPrestationAvailable = "Aucune prestation disponible !";
 final String labelNoEmployeeAvailable = "Aucun prestataire disponible !";
+
+// Profil
+
+final String aboutTeam =
+    "Ce projet a été réalisé en 2022 à l’Université de Nice Côte d’Azur par le trinôme ci dessous sous la supervision de Mr Stephane Jeannin. Cette application (son volet client) permettra aux utilisateurs de réserver des prestations et d’acheter des formations dans le domaine de la coiffure et de les suivre.";
