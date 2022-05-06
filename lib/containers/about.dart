@@ -102,12 +102,12 @@ class About extends StatelessWidget {
                     ),
                     child: ListTile(
                       onTap: () async {
-                        if (!await launch("https://github.com/")) {
+                        if (!await launch("https://github.com/KiiroPaulZ")) {
                           throw 'Could not launch link';
                         }
                       },
                       leading: CircleAvatar(
-                        backgroundImage: AssetImage("images/cool.png"),
+                        backgroundImage: AssetImage("images/paul.png"),
                       ),
                       trailing: Icon(Icons.link_rounded),
                       title: Text(

@@ -38,6 +38,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
   TextEditingController? reservationDate;
   int selectedCardIndex = -1;
   int reservationHour = -1;
+  bool displayReservationButton = true;
 
   @override
   void initState() {
@@ -196,11 +197,15 @@ class _BookingCalendarState extends State<BookingCalendar> {
                               DateFormat('EEEE').format(DateTime.parse(date));
 
                           if (!available.containsKey(todayName)) {
+                            selectedCardIndex = -1;
+                            reservationHour = -1;
+
                             return Center(
                               child: Text(
                                   "Il n'y a pas de disponibilité pour ce jour !"),
                             );
                           } else {
+                            displayReservationButton = true;
                             Map data = snapshot.data as Map;
                             List reservations = data['data'];
 
@@ -283,7 +288,6 @@ class _BookingCalendarState extends State<BookingCalendar> {
                                       ),
                                     );
                                   }
-                                  return Text("");
                                 },
                               ),
                             );
@@ -301,6 +305,7 @@ class _BookingCalendarState extends State<BookingCalendar> {
               padding: EdgeInsets.fromLTRB(0, 1.5.h, 0, 1.5.h),
             ),
             //button reserver
+
             new Container(
               margin: EdgeInsets.fromLTRB(3.h, 0, 3.h, 0),
               child: new ElevatedButton(
@@ -392,5 +397,17 @@ class _BookingCalendarState extends State<BookingCalendar> {
 
   String timeFormatter(int hour) {
     return hour.toString() + ":00:00.000";
+  }
+
+  _displayButton() {
+    setState(() {
+      displayReservationButton = true;
+    });
+  }
+
+  _hideButton() {
+    setState(() {
+      displayReservationButton = false;
+    });
   }
 }

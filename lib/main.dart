@@ -68,13 +68,11 @@ class _HomeState extends State<Home> {
   String isLogged = "";
 
   _loadPreferences() async {
-    FlutterSecureStorage storage = new FlutterSecureStorage();
-    var tmp = await storage.read(key: 'jwt');
-    if (tmp != null) {
-      setState(() {
-        isLogged = tmp;
-      });
-    }
+    FlutterSecureStorage storage = const FlutterSecureStorage();
+    var tmp = await storage.read(key: 'isLogged');
+    setState(() {
+      isLogged = tmp!;
+    });
   }
 
   @override

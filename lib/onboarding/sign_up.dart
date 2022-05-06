@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_new
 import 'dart:convert';
 import 'package:ebarber/landing_activies/home/landing_home.dart';
+import 'package:ebarber/onboarding/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -181,6 +182,23 @@ class _SignUpState extends State<SignUp> {
                   padding:
                       EdgeInsets.symmetric(horizontal: 15.w, vertical: 2.h),
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 1.2.h, 0, 1.2.h),
+              ),
+              Center(
+                child: InkWell(
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignIn()),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                    child: Text(
+                      "Vous avez un compte ? Connectez vous",
+                      style: TextStyle(fontSize: 10.sp),
+                    )),
               ),
             ],
           )),

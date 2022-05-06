@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:ebarber/landing_activies/home/landing_home.dart';
+import 'package:ebarber/onboarding/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -195,7 +196,13 @@ class _SignInState extends State<SignIn> {
             ),
             Center(
               child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignUp()),
+                      (Route<dynamic> route) => false,
+                    );
+                  },
                   child: Text(
                     strings.createAccountInvitation,
                     style: TextStyle(fontSize: 10.sp),

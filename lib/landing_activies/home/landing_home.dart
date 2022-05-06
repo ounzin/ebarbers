@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_new
 
+import 'package:ebarber/components/search.dart';
 import 'package:ebarber/landing_activies/home/formations.dart';
 import 'package:ebarber/landing_activies/home/home.dart';
 import 'package:ebarber/landing_activies/home/profil.dart';
@@ -100,10 +101,16 @@ class _LandingHomeState extends State<LandingHome> {
           width: 30.w,
         ),
         //
-        new Icon(
-          icon,
-          color: colors.primary_color,
-          size: 8.w,
+        new InkWell(
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => Search()));
+          },
+          child: new Icon(
+            icon,
+            color: colors.primary_color,
+            size: 8.w,
+          ),
         )
       ],
     );

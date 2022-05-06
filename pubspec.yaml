@@ -83,6 +83,7 @@ flutter:
      - images/cover-formation.jpg
      - images/cool.png
      - images/ahmed.jpg
+     - images/paul.png
 
   fonts:
     - family: Poppins
