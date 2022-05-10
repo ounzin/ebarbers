@@ -61,6 +61,7 @@ class _SearchPrestationState extends State<SearchPrestation> {
 
   @override
   void initState() {
+    print(widget.prestations!);
     _loadingData();
     super.initState();
   }
@@ -135,6 +136,7 @@ class _SearchPrestationState extends State<SearchPrestation> {
                                         physics: ScrollPhysics(),
                                         itemCount: widget.lengthPrestation,
                                         itemBuilder: (context, index) {
+                                          String? categoryImageUrl;
                                           int idPrestation =
                                               widget.prestations![index]['id'];
 
@@ -145,19 +147,28 @@ class _SearchPrestationState extends State<SearchPrestation> {
                                               widget.prestations![index]
                                                   ['attributes']['description'];
 
-                                          String categoryImageUrl = strings
-                                                  .host +
-                                              widget.prestations![index]
-                                                              ['attributes']
-                                                          ['categorie']['data']
-                                                      ['attributes']['holder']
-                                                  ['data']['attributes']['url'];
+                                          if (widget.prestations![index]
+                                                  ['attributes']['category'] ==
+                                              null) {
+                                            categoryImageUrl =
+                                                strings.defaultHolderUrl;
+                                          } else {
+                                            categoryImageUrl = strings.host +
+                                                widget.prestations![index]
+                                                                ['attributes']
+                                                            ['category']['data']
+                                                        ['attributes']['holder']
+                                                    [
+                                                    'data']['attributes']['url'];
+                                          }
+
                                           //
                                           String titlePrestation =
                                               widget.prestations![index]
                                                   ['attributes']['title'];
                                           int price = widget.prestations![index]
                                               ['attributes']['price'];
+
                                           return new Card(
                                             elevation: 01,
                                             shape: RoundedRectangleBorder(

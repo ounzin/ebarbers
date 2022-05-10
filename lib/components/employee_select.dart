@@ -31,7 +31,8 @@ class EmployeeSelect extends StatefulWidget {
 class _EmployeeSelectState extends State<EmployeeSelect> {
   List? employees;
   int? lengthEmployees;
-  int val = 1;
+  int val = 0;
+  int indexCurrent = 0;
   String? nomEmployee;
   _loadData() async {
     setState(() {
@@ -143,6 +144,7 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                                       if (isCheckedRadioList[index] == true) {
                                         setState(() {
                                           val = value!;
+                                          indexCurrent = index;
                                         });
                                       } else {
                                         setState(() {
@@ -174,8 +176,8 @@ class _EmployeeSelectState extends State<EmployeeSelect> {
                           MaterialStateProperty.all(colors.primary_color)),
                   child: new Text("Choisir date et heure"),
                   onPressed: () {
-                    Map availability =
-                        widget.employees![val]['attributes']['availability'];
+                    Map availability = widget.employees![indexCurrent]
+                        ['attributes']['availability'];
 
                     Map avalaible = {};
                     availability.forEach((k, v) {

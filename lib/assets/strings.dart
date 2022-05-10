@@ -4,7 +4,8 @@ final String appName = "E-Barber";
 
 // API ---
 
-final String host = "http://localhost:1337";
+//final String host = "http://localhost:1337";
+final String host = "https://33e1-134-59-101-253.eu.ngrok.io";
 final String categoriesApiUrl = host + "/api/categories";
 final String prestationsApiUrl = host + "/api/prestations";
 final String formationApiUrl = host + "/api/formations";
@@ -19,6 +20,7 @@ final String loadingDataText = "Chargement en cours ...";
 final String labelGoBack = "Retour";
 final String currencySymbol = "€";
 
+final String defaultHolderUrl = "https://i.imgur.com/P9sz12L.png";
 //
 
 final String loremIpsum =

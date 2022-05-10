@@ -74,6 +74,7 @@ class _FormationTileState extends State<FormationTile> {
             margin: EdgeInsets.fromLTRB(0, 0.5.w, 0, 0.5.w),
             child: new Column(children: [
               new Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   new Container(
                       margin: EdgeInsets.all(3.w),
@@ -90,21 +91,23 @@ class _FormationTileState extends State<FormationTile> {
 
                   //
                   new Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 10.h, 0),
+                    padding: EdgeInsets.fromLTRB(0, 0, 2.h, 0),
                     child: new Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        new Text(
-                          widget.titleFormation!,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w700),
+                        SizedBox(
+                          child: new Text(
+                            widget.titleFormation!,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 9.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700),
+                          ),
                         ),
                         new Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0.5.h, 0, 0.5.h),
+                          padding: EdgeInsets.fromLTRB(0, 0.5.h, 0, 0.5.w),
                         ),
                         new Text(
                           widget.nbrVideos!.toString() + " vidéos",
@@ -115,31 +118,34 @@ class _FormationTileState extends State<FormationTile> {
                     ),
                   ),
 
-                  new InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => FormationPresentation(
-                                  idFormation: widget.idFormation,
-                                  isBuyed: widget.isBuyed,
-                                  urlCover: widget.urlCover,
-                                  priceFormation: widget.price,
-                                  titleFormation: widget.titleFormation,
-                                  descriptionFormation: widget.description,
-                                  videos: widget.videos,
-                                  buyedFormations: widget.buyedFormations,
-                                )),
-                      );
-                    },
-                    child: new CircleAvatar(
-                        backgroundColor: Colors.white,
-                        child: new Center(
-                            child: Icon(
-                          Icons.visibility,
-                          size: 18.sp,
-                          color: colors.primary_color,
-                        ))),
+                  new Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 2.w, 0),
+                    child: new InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FormationPresentation(
+                                    idFormation: widget.idFormation,
+                                    isBuyed: widget.isBuyed,
+                                    urlCover: widget.urlCover,
+                                    priceFormation: widget.price,
+                                    titleFormation: widget.titleFormation,
+                                    descriptionFormation: widget.description,
+                                    videos: widget.videos,
+                                    buyedFormations: widget.buyedFormations,
+                                  )),
+                        );
+                      },
+                      child: new CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: new Center(
+                              child: Icon(
+                            Icons.visibility,
+                            size: 18.sp,
+                            color: colors.primary_color,
+                          ))),
+                    ),
                   )
                 ],
               )

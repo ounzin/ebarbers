@@ -315,20 +315,30 @@ class _BookingCalendarState extends State<BookingCalendar> {
                     backgroundColor:
                         MaterialStateProperty.all(colors.primary_color)),
                 child: new Text("Réserver"),
-                onPressed: () {
+                onPressed: () async {
                   if (selectedCardIndex != -1 && reservationHour != -1) {
-                    createReservation(
+                    /*
+                    print(widget.idClient!);
+                    print(widget.idPrestation!);
+                    print(reservationDate!.text.toString());
+                    print(widget.idEmployee!);
+                   
+                    */
+                    print(timeFormatter(reservationHour));
+                    bool res = await createReservation(
                         widget.idClient!,
                         widget.idPrestation!,
                         reservationDate!.text.toString(),
                         widget.idEmployee!,
                         timeFormatter(reservationHour));
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const BookingSucces()),
-                    );
+                    if (res) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BookingSucces()),
+                      );
+                    }
                   }
                 },
               ),
@@ -362,17 +372,18 @@ class _BookingCalendarState extends State<BookingCalendar> {
     var request = http.Request('POST', Uri.parse(apiUrl));
     request.body = json.encode({
       "data": {
-        "client": idClient,
-        "prestation": idPrestation,
-        "employee": idEmploye,
+        "prestation": idPrestation.toString(),
         "date": date,
+        "employee": idEmploye.toString(),
         "reservationState": "pending",
+        "client": idClient.toString(),
         "time": hour
       }
     });
+
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
-
+    print(response.reasonPhrase);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -396,7 +407,11 @@ class _BookingCalendarState extends State<BookingCalendar> {
   }
 
   String timeFormatter(int hour) {
-    return hour.toString() + ":00:00.000";
+    if (hour < 10) {
+      return "0" + hour.toString() + ":00:00.000";
+    } else {
+      return hour.toString() + ":00:00.000";
+    }
   }
 
   _displayButton() {

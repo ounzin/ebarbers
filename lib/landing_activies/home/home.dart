@@ -121,7 +121,7 @@ class _HomeState extends State<Home> {
                           if (categories![index]['attributes']['holder']
                                   ['data'] ==
                               null) {
-                            holderUrl = null;
+                            holderUrl = strings.defaultHolderUrl;
                           } else {
                             holderUrl = strings.host +
                                 categories![index]['attributes']['holder']

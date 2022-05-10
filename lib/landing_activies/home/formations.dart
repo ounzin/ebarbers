@@ -139,10 +139,16 @@ class _FormationsState extends State<Formations> {
                             formations![index]['attributes']['title'];
                         String descriptionFromation =
                             formations[index]['attributes']['title'];
-                        String urlCover = strings.host +
-                            formations[index]['attributes']['cover']['data']
-                                ['attributes']['url'];
+                        String? urlCover;
 
+                        if (formations[index]['attributes']['cover']['data'] ==
+                            null) {
+                          urlCover = strings.defaultHolderUrl;
+                        } else {
+                          urlCover = strings.host +
+                              formations[index]['attributes']['cover']['data']
+                                  ['attributes']['url'];
+                        }
                         int priceFormation =
                             formations[index]['attributes']['price'];
                         List videos =

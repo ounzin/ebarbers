@@ -208,7 +208,7 @@ class _CategoryState extends State<Category> {
 
   Future<Map> getPrestationsInCategory(int idCategory) async {
     String apiUrl = strings.prestationsApiUrl +
-        '?populate=*&filters[categorie][id][' +
+        '?populate=*&filters[category][id][' +
         '\$' +
         'eq]=$idCategory';
 
